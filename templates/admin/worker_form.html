@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Add Worker | Admin{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><span class="eyebrow">ADMIN</span><h1>Add Worker</h1><p>Create and approve a worker directly from the admin panel.</p></div></section>
+<section class="section"><div class="container"><div class="content-card form-card ds-card"><form method="post" class="form-grid two">
+<label>Full name<input name="name" required></label>
+<label>Phone<input name="phone"></label>
+<label>Email<input type="email" name="email" required></label>
+<label>Password<input type="password" name="password" minlength="6" required></label>
+<label>Location<input name="location"></label>
+
+<label>Experience (years)<input type="number" name="experience" min="0" value="0"></label>
+<label>Hourly rate (₹)<input type="number" name="hourly_rate" min="0" step="1" value="0"></label><div></div>
+<label class="span-2">Bio<textarea name="bio" rows="4"></textarea></label>
+<div class="span-2"><h3>Services</h3><div class="check-grid">{% for service in services %}<label class="check"><input type="checkbox" name="service_ids" value="{{ service.id }}" {% if service.id in selected %}checked{% endif %}> {{ service.icon or "🔧" }} {{ service.name }}</label>{% else %}<p class="muted">Add a service first.</p>{% endfor %}</div></div>
+<div class="span-2"><button class="btn btn-primary btn-lg">Create Worker</button> <a class="btn btn-outline btn-lg" href="{{ url_for('admin.workers') }}">Cancel</a></div>
+</form></div></div></section>
+{% endblock %}

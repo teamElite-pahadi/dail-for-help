@@ -1,0 +1,1 @@
+document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("[data-booking-refresh]").forEach(el=>{const url=el.dataset.bookingRefresh;if(!url)return;setInterval(()=>fetch(url,{headers:{"X-Requested-With":"XMLHttpRequest"}}).then(r=>r.ok?r.text():"").then(html=>{if(html)el.innerHTML=html}).catch(()=>{}),30000)})});

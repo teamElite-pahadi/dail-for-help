@@ -1,0 +1,25 @@
+{% macro booking_tracker(status, progress=0, eta=None) -%}
+<div class="booking-tracker" data-status="{{ status }}">
+  <div class="tracker-head">
+    <strong>Booking Tracker</strong>
+    <span class="tracker-percent">{{ progress|default(0) }}%</span>
+  </div>
+  <div class="tracker-progress"><span style="width: {{ progress|default(0) }}%"></span></div>
+  <div class="tracker-steps">
+    {% set steps = [
+      ('pending','Requested'),
+      ('accepted','Accepted'),
+      ('on_the_way','On The Way'),
+      ('arrived','Arrived'),
+      ('in_progress','Working'),
+      ('completed','Completed')
+    ] %}
+    {% for key,label in steps %}
+      <div class="tracker-step {% if key == status %}active{% endif %}">
+        <span>{{ loop.index }}</span><small>{{ label }}</small>
+      </div>
+    {% endfor %}
+  </div>
+  {% if eta is not none %}<div class="tracker-eta">⏱ Estimated time: {{ eta }}</div>{% endif %}
+</div>
+{%- endmacro %}

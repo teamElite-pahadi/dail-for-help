@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}DIAL FOR SERVICE | Trusted Local Services{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-content">
+      <span class="eyebrow">TRUSTED LOCAL SERVICES</span>
+      <h1>Trusted Professionals,<br><span>Right at Your Door</span></h1>
+      <p class="hero-lead">Find skilled and verified local workers for plumbing, electrical work, cleaning, repairs and more — fast, easy and reliable.</p>
+
+      <form action="{{ url_for('main.search') }}" method="get" class="search-form hero-search">
+        <span>⌕</span>
+        <input name="q" placeholder="Search for a service or worker..." autocomplete="off">
+        <button class="btn btn-primary" type="submit">⌕ &nbsp; Search</button>
+      </form>
+
+      <div class="hero-actions">
+        <a href="{{ url_for('main.services') }}" class="btn btn-primary btn-lg">Find a Service →</a>
+        {% if not current_user.is_authenticated %}
+        <a href="{{ url_for('auth.login') }}" class="btn btn-glass btn-lg">Login to Book</a>
+        {% endif %}
+      </div>
+
+      <div class="trust-row">
+        <span>✓ Registered Workers</span>
+        <span>✓ Simple Booking</span>
+        <span>✓ Customer Reviews</span>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="floating-card card-a ds-card"><b>✓</b><small>Trusted workers</small></div>
+      <div class="hero-panel">
+        <div class="hero-panel-icon">☎</div>
+        <span class="status-dot">● Local help available</span>
+        <h3>What do you need?</h3>
+        <p>Choose a service, find registered workers and send a booking request.</p>
+        <a href="{{ url_for('main.services') }}" class="btn btn-dark full">Explore Services</a>
+      </div>
+      <div class="floating-card card-b ds-card"><b>5★</b><small>Customer reviews</small></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-heading row-heading">
+      <div>
+        <span class="eyebrow">POPULAR SERVICES</span>
+        <h2>What Service Do You Need?</h2>
+        <p>Choose a category and see the registered workers available for that service.</p>
+      </div>
+      <a href="{{ url_for('main.services') }}" class="text-link">View All Services →</a>
+    </div>
+
+    {% if services %}
+    <div class="service-grid">
+      {% for service in services[:8] %}
+      <a class="service-card ds-card" href="{{ url_for('main.service_detail', service_id=service.id) }}">
+        <div class="service-icon">{{ service.icon or "🔧" }}</div>
+        <h3>{{ service.name }}</h3>
+        <p>{{ service.description or "Professional local service." }}</p>
+        <span>View Workers →</span>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">🔧</div>
+      <h3>Services are being prepared</h3>
+      <p>Once services are added by the administrator, they will appear here.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section soft-section">
+  <div class="container">
+    <div class="section-heading center">
+      <span class="eyebrow">SIMPLE PROCESS</span>
+      <h2>How DIAL FOR SERVICE Works</h2>
+      <p>Everything you need, from finding a service to getting the work completed.</p>
+    </div>
+    <div class="steps-grid">
+      {% for title, text in [
+        ("Choose a Service","Select the service you need from the available categories."),
+        ("Find a Worker","Open a service and see workers registered for that service."),
+        ("Send Request","Share your requirement, location and preferred time."),
+        ("Get the Work Done","Track the booking and review the worker after completion.")
+      ] %}
+      <div class="step-card ds-card">
+        <div class="step-number">{{ loop.index }}</div>
+        <h3>{{ title }}</h3>
+        <p>{{ text }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-heading center">
+      <span class="eyebrow">WHY CHOOSE US</span>
+      <h2>A Better Way to Find Local Help</h2>
+      <p>Built around trusted workers, simple booking and clear service updates.</p>
+    </div>
+    <div class="service-grid">
+      <div class="step-card ds-card"><div class="step-number">✓</div><h3>Registered Workers</h3><p>Workers register their skills and services before appearing in the marketplace.</p></div>
+      <div class="step-card ds-card"><div class="step-number">⚡</div><h3>Fast Booking</h3><p>Find the right service and send a request without unnecessary steps.</p></div>
+      <div class="step-card ds-card"><div class="step-number">⌖</div><h3>Location Support</h3><p>Share your location for easier local matching and directions.</p></div>
+      <div class="step-card ds-card"><div class="step-number">★</div><h3>Reviews</h3><p>Customers can review completed bookings and help build trust.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container cta-content">
+    <div>
+      <span class="eyebrow">ARE YOU A PROFESSIONAL?</span>
+      <h2>Grow Your Work With DIAL FOR SERVICE</h2>
+      <p>Register as a worker, select the services you provide and connect with customers.</p>
+    </div>
+    {% if not current_user.is_authenticated %}
+    <a href="{{ url_for('auth.register', role='worker') }}" class="btn btn-light btn-lg">Join as a Worker →</a>
+    {% else %}
+    <a href="{{ url_for('main.services') }}" class="btn btn-light btn-lg">Explore Services →</a>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

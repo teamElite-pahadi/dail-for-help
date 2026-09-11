@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Worker Profile | DIAL FOR SERVICE{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><span class="eyebrow">WORKER SETTINGS</span><h1>Your profile</h1></div></section>
+<section class="section"><div class="container narrow"><form method="post" class="content-card form-grid two ds-card">
+<label>Name<input name="name" value="{{ current_user.name }}" required></label><label>Phone<input name="phone" value="{{ current_user.phone or '' }}"></label><label>Location<input name="location" value="{{ worker.location or '' }}"></label><label>Experience<input type="number" min="0" name="experience" value="{{ worker.experience or 0 }}"></label><label>Hourly rate (₹)<input type="number" min="0" name="hourly_rate" value="{{ worker.hourly_rate or 0 }}"></label><label class="check availability-check"><input type="checkbox" name="is_available" {% if worker.is_available %}checked{% endif %}> Available for new bookings</label><label class="span-2">Bio<textarea name="bio" rows="6">{{ worker.bio or '' }}</textarea></label><button class="btn btn-primary btn-lg span-2">Save Profile</button></form></div></section>
+{% endblock %}

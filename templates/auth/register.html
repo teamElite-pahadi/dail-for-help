@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Register | DIAL FOR SERVICE{% endblock %}
+{% block content %}
+<section class="auth-page"><div class="auth-card wide ds-card"><div class="auth-logo">☎</div><span class="eyebrow">CUSTOMER ACCOUNT</span><h1>Create your account</h1><form method="post" class="form-grid two"><label>Full name<input name="name" required></label><label>Phone<input name="phone"></label><label>Area / Locality<input name="location" placeholder="e.g. Vaishali Nagar"></label><label class="span-2">Email<input type="email" name="email" required></label><label>Password<input type="password" name="password" minlength="6" required></label><div></div><button class="btn btn-primary btn-lg span-2">Create Account</button></form><div class="auth-links">Already have an account? <a href="{{ url_for('auth.login') }}">Login</a></div></div></section>
+{% endblock %}

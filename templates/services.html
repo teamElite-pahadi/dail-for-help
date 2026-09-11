@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Services | DIAL FOR SERVICE{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><span class="eyebrow">ALL SERVICES</span><h1>Find the right service</h1><p>Choose a category to see available local workers.</p></div></section>
+<section class="section"><div class="container">
+{% if services %}
+<div class="service-grid large">
+{% for service in services %}
+<a class="service-card ds-card" href="{{ url_for('main.service_detail', service_id=service.id) }}">
+<div class="service-icon">{{ service.icon or "🔧" }}</div><h3>{{ service.name }}</h3><p>{{ service.description or "Professional local service." }}</p><span>See available workers →</span>
+</a>
+{% endfor %}
+</div>
+{% else %}
+<div class="empty-state"><div class="empty-icon">🧰</div><h2>No services available yet</h2><p>Ask an administrator to add services.</p></div>
+{% endif %}
+</div></section>
+{% endblock %}

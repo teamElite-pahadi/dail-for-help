@@ -1,0 +1,12 @@
+Flask>=3.1,<4
+Flask-SQLAlchemy>=3.1,<4
+Flask-Login>=0.6,<1
+Werkzeug>=3.1,<4
+
+# Optional: required only if you want real SMS notifications to worker phones
+twilio>=9,<10
+
+gunicorn>=23,<24
+
+# PostgreSQL driver for Render
+psycopg2-binary>=2.9,<3

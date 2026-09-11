@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Booking #{{ booking.id }} | Worker | DIAL FOR SERVICE{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><a class="back-link" href="{{ url_for('worker.bookings') }}">← Booking requests</a><span class="eyebrow">BOOKING #{{ booking.id }}</span><h1>{{ booking.service.name }}</h1></div></section>
+<section class="section"><div class="container profile-layout">
+<div class="content-card ds-card"><h2>Customer request</h2><div class="detail-list"><div><span>Customer</span><b>{{ booking.customer.name }}</b></div><div><span>Phone</span><b>{% if booking.customer.phone %}<a href="tel:{{ booking.customer.phone }}">{{ booking.customer.phone }}</a>{% else %}—{% endif %}</b></div><div><span>Address</span><b>{{ booking.address or "—" }}</b></div>{% if booking.latitude is not none and booking.longitude is not none %}<div><span>Location</span><b><span class="location-badge">📍 GPS shared</span><a class="btn btn-outline map-link" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination={{ booking.latitude }},{{ booking.longitude }}">🧭 Open Directions</a></b></div>{% endif %}<div><span>Scheduled</span><b>{{ booking.scheduled_at.strftime("%d %b %Y, %I:%M %p") if booking.scheduled_at else "—" }}</b></div><div><span>Work</span><b>{{ booking.description or "—" }}</b></div></div></div>
+<aside class="content-card ds-card"><h3>Contact customer</h3>{% if booking.customer.phone %}<a class="btn btn-primary full" href="tel:{{ booking.customer.phone }}">📞 Call Customer</a>{% else %}<p>Customer phone number is not available.</p>{% endif %}
+<h3>Update booking</h3><form method="post" class="form-grid">
+<label>Status<select name="status"><option value="accepted" {% if booking.status=="accepted" %}selected{% endif %}>Accepted</option><option value="rejected" {% if booking.status=="rejected" %}selected{% endif %}>Rejected</option><option value="in_progress" {% if booking.status=="in_progress" %}selected{% endif %}>In progress</option><option value="completed" {% if booking.status=="completed" %}selected{% endif %}>Completed</option></select></label>
+<label>Work progress: <b>{{ booking.progress_percent or 0 }}%</b><input type="range" name="progress_percent" min="0" max="100" step="5" value="{{ booking.progress_percent or 0 }}"></label>
+<label>Estimated time remaining (minutes)<input type="number" name="estimated_minutes" min="0" max="100000" value="{{ booking.estimated_minutes or 0 }}"></label>
+<button class="btn btn-primary full">Save Status & Progress</button></form>
+<p class="muted">Tip: set progress as the work moves from 25% → 50% → 75% → 100%. Marking completed automatically sets 100%.</p>
+</aside></div></section>
+{% endblock %}

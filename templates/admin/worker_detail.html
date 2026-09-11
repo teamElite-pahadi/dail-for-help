@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Worker Profile | Admin{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><span class="eyebrow">ADMIN • WORKER PROFILE</span><h1>{{ worker.display_name }}</h1><p>Complete worker information and services.</p></div></section>
+<section class="section"><div class="container"><div class="admin-profile-card">
+<div class="admin-profile-head"><div><span class="ds-badge">{{ "Approved" if worker.is_approved else "Pending Approval" }}</span><h2>{{ worker.display_name }}</h2><p class="ds-muted">{{ worker.user.email }}</p></div></div>
+<div class="admin-profile-grid"><div class="admin-profile-field"><b>Phone</b><span>{{ worker.user.phone or "—" }}</span></div><div class="admin-profile-field"><b>Location</b><span>{{ worker.location or worker.user.location or "—" }}</span></div><div class="admin-profile-field"><b>Experience</b><span>{{ worker.experience or 0 }} years</span></div><div class="admin-profile-field"><b>Hourly Rate</b><span>₹{{ "%.0f"|format(worker.hourly_rate or 0) }}</span></div><div class="admin-profile-field"><b>Availability</b><span>{{ "Available" if worker.is_available else "Unavailable" }}</span></div><div class="admin-profile-field"><b>Rating</b><span>★ {{ worker.average_rating or "New" }}</span></div></div>
+<div class="admin-profile-field full-field"><b>Services Provided</b><div class="tag-row">{% for service in services %}<span class="ds-badge">{{ service.icon or "🔧" }} {{ service.name }}</span>{% else %}<span>—</span>{% endfor %}</div></div>
+<div class="admin-profile-field full-field"><b>Bio</b><p>{{ worker.bio or "No bio provided." }}</p></div>
+<a class="btn btn-outline" href="{{ url_for('admin.workers') }}">← Back to Workers</a>
+</div></div></section>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}{{ service.name }} | DIAL FOR SERVICE{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><a class="back-link" href="{{ url_for('main.services') }}">← All services</a><div class="detail-title"><div class="service-icon big">{{ service.icon or "🔧" }}</div><div><span class="eyebrow">SERVICE</span><h1>{{ service.name }}</h1><p>{{ service.description or "Find trusted workers for this service." }}</p></div></div></div></section>
+<section class="section"><div class="container">
+<div class="content-card location-search-card ds-card">
+  <div class="section-heading"><div><span class="eyebrow">LOCAL WORKERS</span><h2>Find workers near you</h2><p class="muted">Enter your area/locality to see available approved workers from the same area first.</p></div></div>
+  <form method="get" class="form-grid two">
+    <label>Your area / locality<input name="area" value="{{ area or '' }}" placeholder="e.g. Vaishali Nagar" required></label>
+    <div class="form-actions"><button class="btn btn-primary" type="submit">📍 Find Local Workers</button></div>
+  </form>
+  {% if area and location_match %}<p class="location-success">✓ Showing {{ workers|length }} available {{ service.name }} worker(s) in/near <b>{{ area }}</b>.</p>
+  {% elif area and not location_match and total_workers %}<p class="muted">No worker was found in <b>{{ area }}</b>. Showing all available approved {{ service.name }} workers so you can still request help.</p>{% endif %}
+</div>
+<div class="section-heading row-heading"><div><span class="eyebrow">AVAILABLE WORKERS</span><h2>{% if area and location_match %}Workers in {{ area }}{% else %}Workers for {{ service.name }}{% endif %}</h2></div><span class="muted">{{ workers|length }} available</span></div>
+{% if workers %}
+<div class="worker-grid">
+{% for worker in workers %}
+<div class="worker-card ds-card">
+<div class="worker-avatar">{{ worker.display_name[:1]|upper }}</div>
+<div class="worker-info"><h3>{{ worker.display_name }}</h3><div class="rating">★ {{ worker.average_rating or "New" }} {% if worker.review_count %}<small>({{ worker.review_count }})</small>{% endif %}</div><p>📍 {{ worker.location or "Local worker" }}</p><p>{{ worker.experience or 0 }} years experience{% if worker.hourly_rate %} · ₹{{ "%.0f"|format(worker.hourly_rate) }}/hr{% endif %}</p></div>
+<div class="worker-actions"><a class="btn btn-outline" href="{{ url_for('main.worker_profile', worker_id=worker.id) }}">Profile</a>{% if current_user.is_authenticated and current_user.is_customer %}<a class="btn btn-primary" href="{{ url_for('booking.create', worker_id=worker.id, service_id=service.id) }}">Book</a>{% elif not current_user.is_authenticated %}<a class="btn btn-primary" href="{{ url_for('auth.login') }}">Login to Book</a>{% endif %}</div>
+</div>
+{% endfor %}
+</div>
+{% else %}
+<div class="empty-state"><div class="empty-icon">👷</div><h2>No available workers yet</h2><p>Workers who offer this service will appear here when they register and become available.</p></div>
+{% endif %}
+</div></section>
+{% endblock %}

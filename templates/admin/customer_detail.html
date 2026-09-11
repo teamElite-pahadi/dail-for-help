@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Customer Profile | Admin{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><span class="eyebrow">ADMIN • CUSTOMER PROFILE</span><h1>{{ customer.name }}</h1><p>Customer account details and booking history.</p></div></section>
+<section class="section"><div class="container"><div class="admin-profile-card">
+<div class="admin-profile-head"><div><span class="ds-badge">Customer</span><h2>{{ customer.name }}</h2><p class="ds-muted">{{ customer.email }}</p></div></div>
+<div class="admin-profile-grid"><div class="admin-profile-field"><b>Phone</b><span>{{ customer.phone or "—" }}</span></div><div class="admin-profile-field"><b>Area / Location</b><span>{{ customer.location or "—" }}</span></div><div class="admin-profile-field"><b>Account Status</b><span>{{ "Active" if customer.is_active else "Inactive" }}</span></div><div class="admin-profile-field"><b>Joined</b><span>{{ customer.created_at.strftime("%d %b %Y") if customer.created_at else "—" }}</span></div></div>
+<div class="admin-profile-field full-field"><b>Booking History</b>{% for b in bookings %}<div class="mini-booking"><div><b>#{{ b.id }} · {{ b.service.name }}</b><span>{{ b.created_at.strftime("%d %b %Y") if b.created_at else "—" }} → {{ b.worker.display_name }}</span></div><span class="status status-{{ b.status }}">{{ b.status|replace("_"," ")|title }}</span></div>{% else %}<p class="ds-muted">No bookings yet.</p>{% endfor %}</div>
+<a class="btn btn-outline" href="{{ url_for('admin.customers') }}">← Back to Customers</a>
+</div></div></section>
+{% endblock %}

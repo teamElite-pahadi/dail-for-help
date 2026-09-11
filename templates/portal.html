@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Welcome | DIAL FOR SERVICE{% endblock %}
+{% block content %}
+<section class="portal-page">
+  <div class="container portal-wrap">
+    <div class="portal-brand">☎ <span>DIAL <b>FOR SERVICE</b></span></div>
+    <span class="eyebrow">WELCOME</span>
+    <h1>How do you want to continue?</h1>
+    <p class="portal-lead">Customers can book local help and workers can manage requests and bookings.</p>
+    <div class="portal-grid">
+      <a class="portal-card customer ds-card" href="{{ url_for('auth.login', role='customer') }}">
+        <div class="portal-icon">👤</div><h2>Customer</h2><p>Login or create an account, choose a service, select a worker and book.</p><span>Continue as Customer →</span>
+      </a>
+      <a class="portal-card worker ds-card" href="{{ url_for('auth.login', role='worker') }}">
+        <div class="portal-icon">👷</div><h2>Worker</h2><p>Login to receive booking requests, accept or reject work, manage bookings and contact customers.</p><span>Continue as Worker →</span>
+      </a>
+      <a class="portal-card admin ds-card" href="{{ url_for('auth.login', role='admin') }}">
+        <div class="portal-icon">⚙️</div><h2>Administrator</h2><p>Secure admin login for managing workers, customers, services, bookings and reviews.</p><span>Admin Login →</span>
+      </a>
+    </div>
+    <div class="portal-note">Workers receive booking requests on their registered mobile number when SMS is configured.</div>
+  </div>
+</section>
+{% endblock %}

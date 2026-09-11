@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Review Booking | DIAL FOR SERVICE{% endblock %}
+{% block content %}
+<section class="auth-page"><div class="auth-card ds-card"><span class="eyebrow">CUSTOMER REVIEW</span><h1>Rate {{ booking.worker.display_name }}</h1><p>How was your {{ booking.service.name }} experience?</p><form method="post" class="form-grid"><label>Rating<select name="rating" required><option value="">Choose rating</option><option value="5">★★★★★ Excellent</option><option value="4">★★★★☆ Good</option><option value="3">★★★☆☆ Average</option><option value="2">★★☆☆☆ Poor</option><option value="1">★☆☆☆☆ Very Poor</option></select></label><label>Comment<textarea name="comment" rows="5" placeholder="Share your experience..."></textarea></label><button class="btn btn-primary btn-lg full">Submit Review</button></form></div></section>
+{% endblock %}

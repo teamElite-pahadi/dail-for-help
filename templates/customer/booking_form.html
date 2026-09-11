@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Book {{ service.name }} | DIAL FOR SERVICE{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><span class="eyebrow">NEW BOOKING</span><h1>Book {{ service.name }}</h1><p>Request <b>{{ worker.display_name }}</b> for this service.</p></div></section>
+<section class="section"><div class="container narrow"><form method="post" class="content-card form-grid ds-card" id="booking-form">
+<label>Preferred date & time<input type="datetime-local" name="scheduled_at" required></label>
+<label>Service address<input id="service-address" name="address" required placeholder="House/flat, street, area, city"></label>
+<div>
+  <label>Customer location</label>
+  <div class="location-tools">
+    <button class="btn btn-outline" type="button" id="get-location">📍 Use My Current Location</button>
+    <button class="btn btn-outline" type="button" id="clear-location" hidden>Clear Location</button>
+  </div>
+  <input type="hidden" name="latitude" id="latitude">
+  <input type="hidden" name="longitude" id="longitude">
+  <p class="location-status" id="location-status">Optional GPS sharing helps the worker reach your home faster. Your location is shared with the selected worker through this booking.</p>
+</div>
+<label>What do you need help with?<textarea name="description" rows="5" required placeholder="Describe the work clearly..."></textarea></label>
+<button class="btn btn-primary btn-lg">Send Booking Request</button>
+</form></div></section>
+<script>
+(function(){
+  const btn=document.getElementById('get-location'), clear=document.getElementById('clear-location');
+  const lat=document.getElementById('latitude'), lng=document.getElementById('longitude'), status=document.getElementById('location-status');
+  if(!navigator.geolocation){ btn.disabled=true; status.textContent='GPS is not supported by this browser. Please enter the full service address.'; return; }
+  btn.addEventListener('click',()=>{
+    status.textContent='Requesting your location…';
+    navigator.geolocation.getCurrentPosition(pos=>{
+      lat.value=pos.coords.latitude.toFixed(7); lng.value=pos.coords.longitude.toFixed(7);
+      status.textContent='✓ Location captured. It will be shared with the selected worker after you send the booking.';
+      clear.hidden=false;
+    },()=>{ status.textContent='Location permission was not granted. You can still book using the full service address.'; },{enableHighAccuracy:true,timeout:10000,maximumAge:60000});
+  });
+  clear.addEventListener('click',()=>{lat.value='';lng.value='';clear.hidden=true;status.textContent='GPS location cleared. The worker will use the service address.';});
+})();
+</script>
+{% endblock %}

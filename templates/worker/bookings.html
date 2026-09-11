@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Booking Requests | DIAL FOR SERVICE{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><span class="eyebrow">WORKER</span><h1>Booking Requests</h1><p>Accept or decline customer requests from here.</p></div></section>
+<section class="section"><div class="container"><div class="booking-list">
+{% for booking in bookings %}
+<div class="booking-card ds-card">
+  <a class="booking-main" href="{{ url_for('worker.booking_detail', booking_id=booking.id) }}"><span class="booking-service">{{ booking.service.name }}</span><h3>{{ booking.customer.name }}</h3><p>📍 {{ booking.address or "No address" }}</p>{% if booking.latitude is not none and booking.longitude is not none %}<span class="location-badge">GPS location shared</span><p><a class="btn btn-outline" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination={{ booking.latitude }},{{ booking.longitude }}">🧭 Get Directions</a></p>{% endif %}<p>Phone: {% if booking.customer.phone %}<a href="tel:{{ booking.customer.phone }}">{{ booking.customer.phone }}</a>{% else %}Not provided{% endif %}</p>{% if booking.customer.phone %}<p><a class="btn btn-outline" href="tel:{{ booking.customer.phone }}">📞 Call Customer</a></p>{% endif %}</a>
+  <div class="booking-side"><span class="status status-{{ booking.status }}">{{ booking.status|replace("_"," ")|title }}</span><small>{{ booking.scheduled_at.strftime("%d %b %Y, %I:%M %p") if booking.scheduled_at else "No time" }}</small>
+  {% if booking.status == 'pending' %}
+  <div class="booking-actions">
+    <form method="post" action="{{ url_for('worker.booking_detail', booking_id=booking.id) }}"><input type="hidden" name="status" value="accepted"><button class="btn btn-primary" type="submit">✓ Accept</button></form>
+    <form method="post" action="{{ url_for('worker.booking_detail', booking_id=booking.id) }}"><input type="hidden" name="status" value="rejected"><button class="btn btn-outline" type="submit">✕ Decline</button></form>
+  </div>
+  {% elif booking.status == 'accepted' %}
+  <form method="post" action="{{ url_for('worker.booking_detail', booking_id=booking.id) }}"><input type="hidden" name="status" value="in_progress"><button class="btn btn-primary" type="submit">Start Work</button></form>
+  {% elif booking.status == 'in_progress' %}
+  <form method="post" action="{{ url_for('worker.booking_detail', booking_id=booking.id) }}"><input type="hidden" name="status" value="completed"><button class="btn btn-primary" type="submit">Mark Completed</button></form>
+  {% endif %}
+  </div>
+</div>
+{% else %}<div class="empty-state"><h2>No requests</h2><p>New customer requests will appear here.</p></div>{% endfor %}
+</div></div></section>
+{% endblock %}

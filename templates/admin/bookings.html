@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Bookings | Admin{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><span class="eyebrow">ADMIN</span><h1>Bookings</h1><p>Manage all customer booking requests from the admin panel.</p></div></section>
+<section class="section"><div class="container"><div class="admin-table">
+{% for b in bookings %}
+<div class="table-row" style="align-items:center;">
+  <a class="table-main" href="{{ url_for('booking.detail', booking_id=b.id) }}" style="text-decoration:none;color:inherit;flex:1;">
+    <div><b>#{{ b.id }} · {{ b.service.name }}</b><small>Customer: {{ b.customer.name }}</small><small>Worker: {{ b.worker.display_name }}</small></div>
+  </a>
+  <span>{{ b.scheduled_at.strftime("%d %b %Y") if b.scheduled_at else "—" }}</span>
+  <span class="status status-{{ b.status }}">{{ b.status|replace("_"," ")|title }}</span>
+  {% if b.status == 'pending' %}
+  <div class="booking-actions" style="display:flex;gap:8px;flex-wrap:wrap;">
+    <form method="post" action="{{ url_for('admin.update_booking_status', booking_id=b.id) }}">
+      <input type="hidden" name="status" value="accepted">
+      <button class="btn btn-primary" type="submit">✓ Accept</button>
+    </form>
+    <form method="post" action="{{ url_for('admin.update_booking_status', booking_id=b.id) }}">
+      <input type="hidden" name="status" value="rejected">
+      <button class="btn btn-outline" type="submit">✕ Decline</button>
+    </form>
+  </div>
+  {% elif b.status == 'accepted' %}
+  <form method="post" action="{{ url_for('admin.update_booking_status', booking_id=b.id) }}">
+    <input type="hidden" name="status" value="in_progress">
+    <button class="btn btn-primary" type="submit">Start Work</button>
+  </form>
+  {% elif b.status == 'in_progress' %}
+  <form method="post" action="{{ url_for('admin.update_booking_status', booking_id=b.id) }}">
+    <input type="hidden" name="status" value="completed">
+    <button class="btn btn-primary" type="submit">Mark Completed</button>
+  </form>
+  {% endif %}
+</div>
+{% else %}<div class="empty-state"><h2>No bookings</h2><p>Customer bookings will appear here.</p></div>{% endfor %}
+</div></div></section>
+{% endblock %}

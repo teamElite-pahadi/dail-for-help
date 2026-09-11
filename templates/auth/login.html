@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Login | DIAL FOR SERVICE{% endblock %}
+{% block content %}
+<section class="auth-page"><div class="auth-card ds-card"><div class="auth-logo">☎</div><span class="eyebrow">{% if login_role == "admin" %}ADMIN LOGIN{% elif login_role == "worker" %}WORKER LOGIN{% else %}CUSTOMER LOGIN{% endif %}</span><h1>{% if login_role == "admin" %}Admin login{% elif login_role == "worker" %}Worker login{% else %}Customer login{% endif %}</h1><p>Manage bookings, services and your profile.</p><form method="post" class="form-grid"><label>Email<input type="email" name="email" required autocomplete="email"></label><label>Password<input type="password" name="password" required autocomplete="current-password"></label><button class="btn btn-primary btn-lg full">Login</button></form><div class="auth-links">{% if login_role == "customer" %}
+<span>New customer?</span><a href="{{ url_for('auth.register') }}">Create account</a>
+{% elif login_role == "worker" %}
+<span>New worker?</span><a href="{{ url_for('auth.worker_register') }}">Create worker account</a>
+{% endif %}{% if login_role != "admin" %}<a href="{{ url_for('auth.login', role='admin') }}">⚙ Admin Login</a>{% endif %}<a href="{{ url_for('main.home') }}">← Choose account type</a></div></div></section>
+{% endblock %}

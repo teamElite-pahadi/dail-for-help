@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Booking #{{ booking.id }} | DIAL FOR SERVICE{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><a class="back-link" href="{{ url_for('booking.my_bookings') if current_user.is_customer else url_for('worker.bookings') }}">← Back</a><span class="eyebrow">BOOKING #{{ booking.id }}</span><h1>{{ booking.service.name }}</h1></div></section>
+<section class="section"><div class="container profile-layout">
+<div class="content-card ds-card"><h2>Booking Tracker</h2>
+<div class="tracker">
+  {% set steps = [("pending","Request sent"),("accepted","Worker accepted"),("in_progress","Work in progress"),("completed","Completed")] %}
+  {% for key,label in steps %}
+  <div class="tracker-step {% if booking.status == key %}active{% elif (key == 'accepted' and booking.status in ['in_progress','completed']) or (key == 'in_progress' and booking.status == 'completed') %}done{% endif %}">
+    <div class="tracker-dot">{% if (key == 'completed' and booking.status == 'completed') or (key == 'accepted' and booking.status in ['in_progress','completed']) or (key == 'in_progress' and booking.status == 'completed') %}✓{% else %}{{ loop.index }}{% endif %}</div><span>{{ label }}</span>
+  </div>
+  {% endfor %}
+</div>
+<div class="progress-box"><div class="progress-heading"><b>Work progress</b><strong>{{ booking.progress_percent or 0 }}%</strong></div><div class="progress-bar"><span style="width: {{ booking.progress_percent or 0 }}%"></span></div><p class="muted">{% if booking.estimated_minutes %}Estimated time remaining: <b>{{ booking.estimated_minutes }} minutes</b>{% elif booking.status == 'completed' %}Work completed{% elif booking.status == 'pending' %}Waiting for worker to accept{% else %}Worker has not provided an estimated remaining time yet.{% endif %}</p></div>
+<div class="detail-list"><div><span>Status</span><b class="status status-{{ booking.status }}">{{ booking.status|replace("_"," ")|title }}</b></div><div><span>Worker</span><b>{{ booking.worker.display_name }}</b></div>{% if booking.worker.user and booking.worker.user.phone %}<div><span>Phone</span><b><a href="tel:{{ booking.worker.user.phone }}">{{ booking.worker.user.phone }}</a></b></div>{% endif %}<div><span>Area / Address</span><b>{{ booking.address or "—" }}</b></div>{% if booking.latitude is not none and booking.longitude is not none %}<div><span>GPS Location</span><b><span class="location-badge">📍 Shared with worker</span><a class="btn btn-outline map-link" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query={{ booking.latitude }},{{ booking.longitude }}">View Location</a></b></div>{% endif %}<div><span>Scheduled</span><b>{{ booking.scheduled_at.strftime("%d %b %Y, %I:%M %p") if booking.scheduled_at else "—" }}</b></div><div><span>Description</span><b>{{ booking.description or "—" }}</b></div></div>
+</div>
+<aside class="content-card ds-card"><h3>Contact worker</h3>{% if booking.worker.user and booking.worker.user.phone %}<a class="btn btn-primary full" href="tel:{{ booking.worker.user.phone }}">📞 Call Worker</a>{% else %}<p>Worker phone number is not available.</p>{% endif %}<h3>Next step</h3>{% if current_user.is_customer and booking.status == "completed" and not booking.review %}<p>How was your experience?</p><a class="btn btn-primary full" href="{{ url_for('booking.review', booking_id=booking.id) }}">Leave a Review</a>{% elif booking.status == "pending" %}<p>Waiting for the worker to accept your request.</p>{% elif booking.status == "accepted" %}<p>Your worker has accepted the booking.</p>{% elif booking.status == "in_progress" %}<p>Your service is in progress.</p>{% elif booking.status == "completed" %}<p>Booking completed.</p>{% endif %}</aside>
+</div></section>
+{% endblock %}

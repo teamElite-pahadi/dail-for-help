@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}My Profile | DIAL FOR SERVICE{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><span class="eyebrow">ACCOUNT SETTINGS</span><h1>My Profile</h1><p>Keep your personal details up to date.</p></div></section>
+<section class="section"><div class="container narrow"><form method="post" class="content-card form-grid two ds-card">
+
+<label>Full name<input name="name" value="{{ current_user.name }}" required></label>
+<label>Phone<input name="phone" value="{{ current_user.phone or '' }}"></label>
+<label class="span-2">Area / Locality<input name="location" value="{{ current_user.location or '' }}" placeholder="e.g. Vaishali Nagar"></label>
+<button class="btn btn-primary btn-lg span-2">Save Profile</button>
+</form></div></section>
+{% endblock %}

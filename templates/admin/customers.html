@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Customers | Admin{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><span class="eyebrow">ADMIN</span><h1>Customers</h1></div></section>
+<section class="section"><div class="container"><div class="admin-table">{% for c in customers %}<div class="table-row"><div class="table-main"><div><b>{{ c.name }}</b><small>{{ c.email }}</small></div></div><span>{{ c.phone or "—" }}</span><span>{{ c.created_at.strftime("%d %b %Y") if c.created_at else "—" }}</span><a class="btn btn-small btn-outline" href="{{ url_for('admin.customer_detail', customer_id=c.id) }}">View Profile</a></div>{% else %}<div class="empty-state"><h2>No customers</h2></div>{% endfor %}</div></div></section>
+{% endblock %}
