@@ -1,0 +1,8 @@
+{% macro admin_booking_stats(stats) -%}
+<div class="admin-stats-grid">
+{% for key,label in [('total','Total'),('pending','Pending'),('accepted','Accepted'),('on_the_way','On The Way'),('in_progress','Working'),('completed','Completed'),('cancelled','Cancelled')] %}
+<div class="stat-card"><span>{{ label }}</span><strong>{{ stats.get(key,0) }}</strong></div>
+{% endfor %}
+</div>
+{%- endmacro %}
+<style>.admin-stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}.stat-card{padding:16px;border-radius:16px;background:#fff;box-shadow:0 8px 28px rgba(0,0,0,.07)}.stat-card span{display:block;color:#6b7280;font-size:12px}.stat-card strong{font-size:24px}</style>

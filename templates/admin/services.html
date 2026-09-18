@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Manage Services | Admin{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><div class="admin-title-row"><div><span class="eyebrow">ADMIN</span><h1>Services</h1></div><a class="btn btn-primary" href="{{ url_for('admin.add_service') }}">+ Add Service</a></div></div></section>
+<section class="section"><div class="container"><div class="admin-table">{% for s in services %}<div class="table-row"><div class="table-main"><span class="service-icon small">{{ s.icon or "🔧" }}</span><div><b>{{ s.name }}</b><small>{{ s.slug or "no-slug" }}</small></div></div><span class="admin-desc">{{ s.description or "—" }}</span><span class="status {{ 'status-completed' if s.is_active else 'status-rejected' }}">{{ "Active" if s.is_active else "Hidden" }}</span><div class="row-actions"><a class="btn btn-small btn-outline" href="{{ url_for('admin.edit_service', service_id=s.id) }}">Edit</a><form method="post" action="{{ url_for('admin.toggle_service', service_id=s.id) }}"><button class="btn btn-small btn-outline">{{ "Hide" if s.is_active else "Show" }}</button></form></div></div>{% else %}<div class="empty-state"><h2>No services</h2><a class="btn btn-primary" href="{{ url_for('admin.add_service') }}">Add first service</a></div>{% endfor %}</div></div></section>
+{% endblock %}

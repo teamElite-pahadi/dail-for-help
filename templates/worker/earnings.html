@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Earnings | DIAL FOR SERVICE{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><span class="eyebrow">WORKER PAYMENTS</span><h1>Payments & Earnings</h1><p>See gross service value, DIAL FOR SERVICE commission and your net earnings.</p></div></section>
+<section class="section"><div class="container">
+<div class="stats-grid"><div class="stat-card ds-card"><span>Gross</span><b>₹{{ "%.2f"|format(gross) }}</b></div><div class="stat-card ds-card"><span>10% Commission</span><b>₹{{ "%.2f"|format(commission) }}</b></div><div class="stat-card ds-card"><span>Net Earnings</span><b>₹{{ "%.2f"|format(net) }}</b></div></div>
+<div class="content-card ds-card"><div class="card-heading"><h2>Earning History</h2></div>{% for e in earnings %}<div class="mini-booking"><div><b>{{ e.booking.service.name }}</b><span>Booking #{{ e.booking_id }}</span><span>{{ e.created_at.strftime('%d %b %Y, %I:%M %p') }}</span></div><div style="text-align:right"><b>₹{{ "%.2f"|format(e.net_amount) }}</b><span>Gross ₹{{ "%.2f"|format(e.gross_amount) }} · Commission ₹{{ "%.2f"|format(e.commission_amount) }}</span></div></div>{% else %}<div class="empty-state"><div class="empty-icon">💰</div><h2>No earnings yet</h2><p>Complete an approved booking to create your first earning record.</p></div>{% endfor %}</div>
+</div></section>
+{% endblock %}

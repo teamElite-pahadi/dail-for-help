@@ -1,0 +1,3 @@
+Branding: Dial for Service
+All text occurrences of 'DIAL FOR SERVICE' and 'Dail for Help' were corrected in text-based project files.
+Image files were not modified because baked-in logo text requires image editing.

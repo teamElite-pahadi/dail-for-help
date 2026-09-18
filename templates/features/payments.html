@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Payments | DIAL FOR SERVICE{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><span class="eyebrow">CUSTOMER PAYMENTS</span><h1>Payments & Billing</h1><p>Pay completed bookings securely and keep every transaction in one place.</p></div></section>
+<section class="section"><div class="container">
+<div class="stats-grid"><div class="stat-card ds-card"><span>Total Paid</span><b>₹{{ "%.2f"|format(total) }}</b></div><div class="stat-card ds-card"><span>Pending Payment</span><b>₹{{ "%.2f"|format(pending) }}</b></div><div class="stat-card ds-card"><span>Transactions</span><b>{{ payments|length }}</b></div></div>
+<div class="content-card ds-card"><div class="card-heading"><h2>Payment History</h2><a class="btn btn-small btn-primary" href="{{ url_for('main.services') }}">Book a Service</a></div>
+{% for p in payments %}<div class="mini-booking"><div><b>{{ p.booking.service.name }}</b><span>Booking #{{ p.booking_id }}</span><span>{% if p.status == 'paid' %}Transaction: {{ p.transaction_id }}{% else %}Payment pending{% endif %}</span></div><div style="text-align:right"><b>₹{{ "%.2f"|format(p.amount) }}</b><span class="status status-{{ 'completed' if p.status == 'paid' else 'pending' }}">{{ p.status|title }}</span>{% if p.status == 'pending' and p.booking.status == 'completed' %}<a class="btn btn-small btn-primary" style="margin-top:8px" href="{{ url_for('features.pay_booking', booking_id=p.booking_id) }}">💳 Pay Now</a>{% endif %}</div></div>{% else %}<div class="empty-state"><div class="empty-icon">💳</div><h2>No payments yet</h2><p>When a completed booking is ready for payment, it will appear here.</p><a class="btn btn-primary" href="{{ url_for('main.services') }}">Browse Services</a></div>{% endfor %}</div>
+</div></section>
+{% endblock %}

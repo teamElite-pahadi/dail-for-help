@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Payments & Revenue | DIAL FOR SERVICE{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><span class="eyebrow">ADMIN FINANCE</span><h1>Payments & Revenue</h1><p>Track completed service payments and the platform's 10% commission.</p></div></section>
+<section class="section"><div class="container">
+<div class="stats-grid"><div class="stat-card ds-card"><span>Gross Revenue</span><b>₹{{ "%.2f"|format(gross) }}</b></div><div class="stat-card ds-card"><span>Platform Commission</span><b>₹{{ "%.2f"|format(commission) }}</b></div><div class="stat-card ds-card"><span>Worker Net</span><b>₹{{ "%.2f"|format(worker_net) }}</b></div><div class="stat-card ds-card"><span>Transactions</span><b>{{ payments|length }}</b></div></div>
+<div class="content-card ds-card"><div class="card-heading"><h2>All Transactions</h2></div>{% for p in payments %}<div class="mini-booking"><div><b>#{{ p.booking_id }} · {{ p.booking.service.name }}</b><span>{{ p.customer.name }} → {{ p.worker.display_name }}</span><span>{{ p.transaction_id }} · {{ p.created_at.strftime('%d %b %Y, %I:%M %p') }}</span></div><div style="text-align:right"><b>₹{{ "%.2f"|format(p.amount) }}</b><span>Commission ₹{{ "%.2f"|format(p.commission_amount) }} · Worker ₹{{ "%.2f"|format(p.worker_amount) }}</span></div></div>{% else %}<div class="empty-state"><div class="empty-icon">📊</div><h2>No transactions yet</h2><p>Completed bookings will appear here.</p></div>{% endfor %}</div>
+</div></section>
+{% endblock %}

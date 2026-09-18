@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}My Services | DIAL FOR SERVICE{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><span class="eyebrow">WORKER</span><h1>Services you provide</h1><p>Choose all categories customers can book you for.</p></div></section>
+<section class="section"><div class="container narrow"><form method="post" class="content-card ds-card"><div class="check-grid big-check">{% for service in services %}<label class="check"><input type="checkbox" name="service_ids" value="{{ service.id }}" {% if service.id in selected %}checked{% endif %}><span class="service-icon small">{{ service.icon or "🔧" }}</span><span><b>{{ service.name }}</b><small>{{ service.description or "Professional service" }}</small></span></label>{% else %}<p class="muted">No services available.</p>{% endfor %}</div><button class="btn btn-primary btn-lg">Save Services</button></form></div></section>
+{% endblock %}

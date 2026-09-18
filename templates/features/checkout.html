@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Payment | DIAL FOR SERVICE{% endblock %}
+{% block head %}
+{% if razorpay_enabled %}<script src="https://checkout.razorpay.com/v1/checkout.js"></script>{% endif %}
+{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><span class="eyebrow">SECURE CHECKOUT</span><h1>Pay for {{ booking.service.name }}</h1><p>Booking #{{ booking.id }} · {{ booking.worker.display_name }}</p></div></section>
+<section class="section"><div class="container" style="max-width:760px">
+<div class="content-card ds-card" style="text-align:center">
+  <div style="font-size:52px">💳</div>
+  <h2>Complete Your Payment</h2>
+  {% if razorpay_enabled %}
+    <p class="muted">Real online payment is enabled through Razorpay.</p>
+  {% else %}
+    <div class="advanced-card" style="margin:18px 0;text-align:left"><b>🧪 TEST / DEMO MODE</b><p class="muted" style="margin:6px 0 0">Razorpay is not configured because PAN/KYC is not available yet. You can test the complete payment → transaction → worker earnings flow here. <strong>No real money is charged.</strong></p></div>
+  {% endif %}
+  <div class="payment-total" style="font-size:42px;font-weight:800;margin:22px 0">₹{{ "%.2f"|format(payment.amount) }}</div>
+  <div class="detail-list" style="text-align:left">
+    <div><span>Service</span><b>{{ booking.service.name }}</b></div>
+    <div><span>Worker</span><b>{{ booking.worker.display_name }}</b></div>
+    <div><span>Booking</span><b>#{{ booking.id }}</b></div>
+    <div><span>Platform commission</span><b>10% · ₹{{ "%.2f"|format(payment.commission_amount) }}</b></div>
+    <div><span>Worker earning</span><b>₹{{ "%.2f"|format(payment.worker_amount) }}</b></div>
+  </div>
+  {% if razorpay_enabled %}
+    <button id="pay-button" class="btn btn-primary full" style="margin-top:20px;font-size:18px;padding:16px">💳 Pay ₹{{ "%.2f"|format(payment.amount) }} Now</button>
+    <p id="pay-message" class="muted" style="margin-top:12px"></p>
+  {% else %}
+    <form method="post" action="{{ url_for('features.demo_payment', booking_id=booking.id) }}" style="margin-top:20px">
+      <button class="btn btn-primary full" style="font-size:18px;padding:16px">🧪 Complete Demo Payment ₹{{ "%.2f"|format(payment.amount) }}</button>
+    </form>
+    <p class="muted" style="margin-top:12px">This is for website testing only. It does not charge a bank account, UPI or card.</p>
+  {% endif %}
+</div>
+</div></section>
+{% endblock %}
+{% if razorpay_enabled %}{% block scripts %}
+<script>
+const payButton=document.getElementById('pay-button'); const msg=document.getElementById('pay-message');
+payButton.addEventListener('click',function(){
+  payButton.disabled=true; payButton.textContent='Opening secure checkout…';
+  const options={key:{{ razorpay_key|tojson }},amount:{{ (payment.amount*100)|round|int }},currency:'INR',name:'DIAL FOR SERVICE',description:{{ (booking.service.name ~ ' - Booking #' ~ booking.id)|tojson }},order_id:{{ payment.razorpay_order_id|tojson }},handler:function(response){
+    msg.textContent='Verifying payment…'; const form=new FormData(); form.append('razorpay_payment_id',response.razorpay_payment_id); form.append('razorpay_order_id',response.razorpay_order_id); form.append('razorpay_signature',response.razorpay_signature);
+    fetch({{ url_for('features.payment_success',booking_id=booking.id)|tojson }},{method:'POST',body:form,credentials:'same-origin'}).then(r=>r.json()).then(data=>{if(data.ok) window.location.href=data.redirect; else throw new Error(data.message||'Verification failed');}).catch(e=>{msg.textContent=e.message;payButton.disabled=false;payButton.textContent='💳 Pay Again';});
+  },prefill:{name:{{ current_user.name|tojson }},email:{{ current_user.email|tojson }},contact:{{ (current_user.phone or '')|tojson }}},theme:{color:'#0b6cff'},modal:{ondismiss:function(){payButton.disabled=false;payButton.textContent='💳 Pay Again';msg.textContent='Checkout closed.';}}};
+  const rzp=new Razorpay(options); rzp.on('payment.failed',function(){msg.textContent='Payment failed or cancelled.';payButton.disabled=false;payButton.textContent='💳 Pay Again';}); rzp.open();
+});
+</script>
+{% endblock %}{% endif %}

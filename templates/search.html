@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Find Help | DIAL FOR SERVICE{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><span class="eyebrow">SEARCH</span><h1>Find a service or worker</h1><form class="search-form page-search"><input name="q" value="{{ q }}" placeholder="Try plumbing, cleaning, electrician..."><button class="btn btn-primary">Search</button></form></div></section>
+<section class="section"><div class="container">
+{% if q %}
+<div class="section-heading"><span class="eyebrow">RESULTS FOR “{{ q }}”</span><h2>Services</h2></div>
+{% if services %}<div class="service-grid">{% for service in services %}<a class="service-card ds-card" href="{{ url_for('main.service_detail', service_id=service.id) }}"><div class="service-icon">{{ service.icon or "🔧" }}</div><h3>{{ service.name }}</h3><p>{{ service.description or "" }}</p><span>View Workers →</span></a>{% endfor %}</div>{% else %}<p class="muted">No matching services.</p>{% endif %}
+<div class="section-heading"><h2>Workers</h2></div>
+{% if workers %}<div class="worker-grid">{% for worker in workers %}<div class="worker-card ds-card"><div class="worker-avatar">{{ worker.display_name[:1]|upper }}</div><div class="worker-info"><h3>{{ worker.display_name }}</h3><div class="rating">★ {{ worker.average_rating or "New" }}</div><p>{{ worker.location or "Local worker" }}</p></div><div class="worker-actions"><a class="btn btn-outline" href="{{ url_for('main.worker_profile', worker_id=worker.id) }}">Profile</a></div></div>{% endfor %}</div>{% else %}<p class="muted">No matching workers.</p>{% endif %}
+{% else %}<div class="empty-state"><div class="empty-icon">⌕</div><h2>Search for local help</h2><p>Use the search box above to find services or workers.</p></div>{% endif %}
+</div></section>
+{% endblock %}

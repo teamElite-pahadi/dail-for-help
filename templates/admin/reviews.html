@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Reviews | Admin{% endblock %}
+{% block content %}
+<section class="page-hero compact"><div class="container"><span class="eyebrow">ADMIN</span><h1>Reviews</h1></div></section>
+<section class="section"><div class="container"><div class="admin-table">{% for r in reviews %}<div class="table-row"><div class="table-main"><div><b>{{ r.worker.display_name }}</b><small>{{ r.customer.name }}</small></div></div><span class="rating">{{ r.stars }}</span><span>{{ r.comment or "No comment" }}</span></div>{% else %}<div class="empty-state"><h2>No reviews</h2></div>{% endfor %}</div></div></section>
+{% endblock %}

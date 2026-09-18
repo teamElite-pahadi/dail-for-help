@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}{{ "Edit" if service else "Add" }} Service | Admin{% endblock %}
+{% block content %}
+<section class="auth-page"><div class="auth-card wide ds-card"><span class="eyebrow">ADMIN · SERVICE</span><h1>{{ "Edit" if service else "Add" }} service</h1><form method="post" class="form-grid"><label>Name<input name="name" value="{{ service.name if service else '' }}" required></label><label>Slug<input name="slug" value="{{ service.slug if service else '' }}" placeholder="plumbing"></label><label>Icon / emoji<input name="icon" value="{{ service.icon if service else '🔧' }}"></label><label>Description<textarea name="description" rows="5">{{ service.description if service else '' }}</textarea></label>{% if service %}<label class="check"><input type="checkbox" name="is_active" {% if service.is_active %}checked{% endif %}> Active</label>{% endif %}<button class="btn btn-primary btn-lg">Save Service</button></form></div></section>
+{% endblock %}
